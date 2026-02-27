@@ -2,12 +2,12 @@ FROM jenkins/inbound-agent:jdk21
 
 USER root
 
-ARG MAVEN_VERSION=3.9.6
-RUN curl -fsSL https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
-    | tar -xz -C /opt && \
-    ln -s /opt/apache-maven-${MAVEN_VERSION} /opt/maven
+# --- Install kubectl ---
 
-ENV MAVEN_HOME=/opt/maven
-ENV PATH="${MAVEN_HOME}/bin:${PATH}"
+RUN curl -fsSL "https://dl.k8s.io/release/$(curl -fsSL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
+    -o /usr/local/bin/kubectl && \
+    chmod +x /usr/local/bin/kubectl
+
+# --- Post installation ---
 
 USER jenkins
